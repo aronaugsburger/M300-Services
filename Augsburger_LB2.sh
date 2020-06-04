@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 #	LB2 Aron Augsburger
-#   - Erstellt mehrere VM's mit jeweils anderer Startseite (index.html).
+#   - Erstellt zwei WebServer mit jeweils anderer Startseite für (index.html).
+#   - Erstellt zwei Datenbanken.
 
 for vm in web01 web02
 do
@@ -21,6 +22,9 @@ do
         config.vm.provision "shell", inline: <<-SHELL 
           sudo apt-get update
           sudo apt-get -y install apache2
+          sudo apt-get -y install ufw
+          sudo ufw enable
+          sudo ufw allow 80/tcp
         SHELL
         end
 %EOF%
@@ -29,7 +33,7 @@ do
     cat <<%EOF% >index.html
     <html>
         <body>
-            <h1>Hallo ${vm}</h1>
+            <h1>Startseite LB2 Aron Augsburger ${vm}</h1>
         </body>
     <html>
 %EOF%
@@ -55,10 +59,15 @@ do
         config.vm.provision "shell", inline: <<-SHELL 
           sudo apt-get update
           sudo apt-get -y install mysql-server
+          sudo useradd -m mysql
+          sudo apt-get -y install ufw
+          sudo ufw enable
+          sudo ufw allow from 0.0.0.0/0 to any port 3306
         SHELL
         end
 %EOF%
     vagrant up
     cd ..
     
+done
 done
