@@ -79,6 +79,11 @@ sudo apt-get -y install ufw
     * Wird für die Webserver benötigt.
   * Port 3306:
     * Wird für die DB-Server benötigt, und ist offen für alle.
+    * Eigentlich ist das überhaupt nicht gut, dass es offen für alle ist, aber da unsere VMs die IP vom DHCP beziehen, ist uns unklar welches Netz wir freigeben müssen.
+* Systeme und VM's die im Internet (DMZ) stehe sollten immer gehärtet sein.
+* Dateinübertragungen sollten immer über eine Verschlüsselte Verbindung gemacht werden.
+* Die Sicherheit kann im Script ausgebaut werden damit es den eigenen Standards entspricht.
+* Mit SSH (Secure Shell) wird eine Verschlüsselte Verbindung zu einem entferneten Rechner oder System aufgebaut. Mit dieser verschlüsselten Verbindung kann auf die Commandline zugegriffen werden und Sicher auf anderen Systemen gearbeiet werden.
 
 ---
 
@@ -116,6 +121,7 @@ https://ibb.co/XZgvtzg
 
 ## Fazit
 * Ich finde das mir dieses Projekt ziemlich gut gelungen ist, da ich ein sauberes und vor allem auch funktionierendes Script schreiben konnte. Ich hatte am Anfang kleine Probleme mit meinem GitHub Account, da ich mein Repository nicht pushen konnte. Nachdem ich dies behoben habe, war alles in Ordnung. Dieses Thema fand ich sehr spannend, da es etwas komplett neues war und Spass gemacht hat. Ausserdem finde ich es auch gut, dass so schnell mehrere VMs erstellt werden können.
+* In diesem Projekt hatte ich einen sehr hohen Wissenszuwachs. Da ich noch nie damit gearbeitet habe, war eigentlich alles neues Wissen, welches ich mir aneignen konnte. Ich kenne jetzt die Basis Befehle von Vagrant, sowie auch den ungefähren Aufbau von GitHub. Ich weiss jetzt wie man anhand von einem Script, mehrere VMs erstellen kann und diese auch gleich bearbeiten oder konfigurieren kann.
 
 ---
 Author: Aron Augsburger
