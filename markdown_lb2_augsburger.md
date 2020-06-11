@@ -79,3 +79,27 @@ sudo apt-get -y install ufw
     * Wird für die Webserver benötigt.
   * Port 3306:
     * Wird für die DB-Server benötigt, und ist offen für alle.
+
+---
+
+## Script anpassen
+* Das Script kann ganz einfach mit dem Visual Studio Code geöffnet werden und dann angepasst werden.
+
+---
+
+## Testergebnisse
+* Leider funktioniert es nicht wenn ich Bilder im Markdown einfüge, darum muss ich meine Testergebnisse beschreiben.
+* Das Script startet erfolgreich, ohne Fehler.
+* Es werden alle 4 VMs erstellt. Das heisst 2 Webserver und 2 DB-Server
+* Alle VMs starten erfolgreich.
+* Die Shell Befehle um die UFW zu installieren wird erledigt. Zusätzlich wird auch gleich noch Port 80 und 3306 geöffnet.
+* Ebenfalls wird apache auf den Webserver installiert und mysql-server auf den DB-Server.
+* Auf den DB-Server wird auch noch der Benutzer mysql erstellt.
+
+---
+
+## Fazit
+* Ich finde das mir dieses Projekt ziemlich gut gelungen ist, da ich ein sauberes und vor allem auch funktionierendes Script schreiben konnte. Ich hatte am Anfang kleine Probleme mit meinem GitHub Account, da ich mein Repository nicht pushen konnte. Nachdem ich dies behoben habe, war alles in Ordnung. Dieses Thema fand ich sehr spannend, da es etwas komplett neues war und Spass gemacht hat. Ausserdem finde ich es auch gut, dass so schnell mehrere VMs erstellt werden können.
+
+---
+Author: Aron Augsburger
