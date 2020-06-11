@@ -88,13 +88,29 @@ sudo apt-get -y install ufw
 ---
 
 ## Testergebnisse
-* Leider funktioniert es nicht wenn ich Bilder im Markdown einfüge, darum muss ich meine Testergebnisse beschreiben.
 * Das Script startet erfolgreich, ohne Fehler.
+![Script_Startet](Script_startet.png)
+https://ibb.co/gvYfWjD
 * Es werden alle 4 VMs erstellt. Das heisst 2 Webserver und 2 DB-Server
-* Alle VMs starten erfolgreich.
+![VMs_erstellt](alleerstelltenVMs.png)
+![VMs_erstellt_hyperv](vmsinhyperv.PNG)
+https://ibb.co/n7ddbSj
+https://ibb.co/zxxTty1
+* Shell Befehle werden ausgeführt.
+![Shell_Befehle](führtshellbefehleaus.PNG)
+https://ibb.co/c65281M
+* SSH Verbindung zu VM
+![vagrant_ssh](sshverbindungzuvm.png)
+https://ibb.co/QkdczkP
 * Die Shell Befehle um die UFW zu installieren wird erledigt. Zusätzlich wird auch gleich noch Port 80 und 3306 geöffnet.
+![ufw](statusufw.png)
+https://ibb.co/LzXLn7g
 * Ebenfalls wird apache auf den Webserver installiert und mysql-server auf den DB-Server.
+![webserver](startseitewebserver.png)
+https://ibb.co/hymZ3RF
 * Auf den DB-Server wird auch noch der Benutzer mysql erstellt.
+![mysql_user](mysqlbenutzerimetc_passwd.png)
+https://ibb.co/XZgvtzg
 
 ---
 
