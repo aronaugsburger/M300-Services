@@ -1,4 +1,4 @@
-# Markdown LB2 Augsburger
+# Markdown LB3 Augsburger
 
 ## ST17e, Modul 300, M. Calisto
 
