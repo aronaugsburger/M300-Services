@@ -1,127 +1,253 @@
-# Markdown LB3 Augsburger
+# M300-Services
 
-## ST17e, Modul 300, M. Calisto
+* Erklärung vom Code
+  * docker.sh
+  * dockerstart.sh
+  * dockerstop.sh
+* Shell Script starten
+* Shell Script anpassen
+* Sicherheit
+* Testing
+  * Testfälle
+  * Testergebnisse
+* Extras
+  * WebGUI für Docker
+  * Minecraft DockerGUI
+* Fazit
+* Reflexion
+* Wissensgewinn
+---
 
-Ausführung Shell Script
+## Erklärung vom Code
 
-* Git Bash öffnen
-* In Repository Ordner wechseln
-* ./Augsburger_LB2.sh ausführen
+### docker.sh
+
+Das Script erstellt einen Docker-Umgebung auf der eine Mysql Datenbank läuft.
+
+Danach wird ein zweite Docker-Umgebung aufgebaut, auf der OSTicket läuft.
+
+Beide Umgebungen werden nach der Erstellung gestartet
+
+
+```
+#!/bin/bash
+```
+
+* Mit dem Befehl `#!/bin/bash` wird dem System gesagt das die Umgebung mit der Bash aufegbaut werden soll. Das System weiss das es für dieses Shellscript die Bash verwenden muss. 
+
+```
+docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=osticket -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=osticket mysql:5
+```
+
+* Mit dieser Zeile wird ein Docker-Container erstellt mit dem Namen `osticket_mysql`. Dieser Docker-Container der erzeugt wird hat schon MySQL instaliert. Angaben wie Datenbank Passwort, MySQL User sowie Datenbank name werden angegeben.  
+
+```
+echo "MySQL VM erstellt"
+```
+
+* Dem User wird mitgeteilt das die MySQL aufgebaut wurde.
+
+```
+docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 campbellsoftwaresolutions/osticket
+```
+
+* Ladet den OSTicket Docker-Container von `campbellsoftwaresolutions` herunter und erstellt diesen Conatiner mit dem Namen `osticket`. Der Port 8080 wird auf den internen Port 80 umgeleitet. Es wird eine Verknüpfung der MySQL Datenbank mit der Docker-Umgebung `osticket_mysql` gemacht. Die `osticket` Umgebung benutzt die MySQL Datenbank der `osticket_mysql` Umgebung. 
 
 ---
 
-## Erklärung von Code
-* Das Skript hat zwei "for" Schlaufen
-  * Die erste "for" Schlaufe erstellt zwei Webserver und die zweite erstellt Datenbanken Server.
+### dockerstart.sh
 
+Mit diesem Script können die beiden Erstellten Dockerumgebungen gestartet werden, falls diese mal gestoppt sind.
 
-Installations Box von Vagrant Cloud:
 ```
-config.vm.box = "kmm/ubuntu-xenial64"
+#!/bin/bash
 ```
-Gibt Hyper-V als VM Provider an:
-```
-config.vm.provider "hyperv" do |h|
 
-Bei Hyper-V müssen die commands mit h angegeben werden. Bei Virtualbox mit vb.
+* Mit dem Befehl `#!/bin/bash` wird dem System gesagt das die Umgebung mit der Bash aufegbaut werden soll. Das System weiss das es für dieses Shellscript die Bash verwenden muss. 
+
 ```
-Dieser Ordner wird mit dem vagrant-VM Verzeichnis synchronisiert. Das selbe hat es für die DB-Server auch einfach /var/lib/mysql:
+docker start osticket_mysql
 ```
-config.vm.synced_folder ".", "/var/www/html"
+
+* startet den Docker-Container mit dem Namen `osticket_mysql`.
+
 ```
-Die Shell in der VM -> Hier wird zum Beispiel Apache installiert:
+echo "Mysql VM gestartet"
 ```
-config.vm.provision "shell", inline: <<-SHELL 
-          sudo apt-get update
-          sudo apt-get -y install apache2
-        SHELL
+
+* Dem User wird mitgeteilt das der Docker-Container `osticket_mysql` gestartet wurde.
+
 ```
-Programmcode des HTML Files:
+docker start osticket
 ```
-# index.html 
-    cat <<%EOF% >index.html
-    <html>
-        <body>
-            <h1>Startseite LB2 Aron Augsburger ${vm}</h1>
-        </body>
-    <html>
+
+* startet den Docker-Conatiner mit dem Namen `osticket`.
+
 ```
-Installiert mysql Server und erstellt den Benutzer mysql:
+echo "OSticket VM gestartet"
 ```
-sudo apt-get -y install mysql-server
-          sudo useradd -m mysql
-          echo mysql_passwort | passwd mysql --stdin
-```
-Hier wird die Firewall installiert und aktiviert. Ebenfalls der Port 80 zugelassen:
-```
-sudo apt-get -y install ufw
-          sudo ufw enable
-          sudo ufw allow 80/tcp
-```
-Hier wird die Firewall installiert und aktiviert. Ebenfalls der Port 3306 für alle zugelassen:
-```
-sudo apt-get -y install ufw
-          sudo ufw enable
-          sudo ufw allow from 0.0.0.0/0 to any port 3306
-```
+
+* Dem User wird mitgeteilt das der Docker-Container `osticket` gestartet wurde.
 
 ---
 
-## Umgebung
-* Das Shellscript erstellt zwei Webserver und zwei DB-Server.
-* Die VMs laufen auf Hyper-V.
+### dockerstop.sh
+
+Mit diesem Script können die beiden Dockerumgebungen gestoppt werden. 
+
+```
+#!/bin/bash
+```
+
+* Mit dem Befehl `#!/bin/bash` wird dem System gesagt das die Umgebung mit der Bash aufegbaut werden soll. Das System weiss das es für dieses Shellscript die Bash verwenden muss.
+
+```
+docker stop osticket_mysql
+```
+
+* stoppt den Docker-Container mit dem Namen `osticket_mysql`.
+
+```
+echo "MySQL VM gestoppt"
+```
+
+* Dem User wird mitgeteilt das der Docker-Container `osticket_mysql` gestoppt wurde.
+
+```
+docker stop osticket
+```
+
+* stoppt den Docker-Container mit dem Namen `osticket`.
+
+```
+echo "OSTicket VM gestoppt"
+```
+
+* Dem User wird mitgeteilt das der Docker-Container `osticket` gestoppt wurde.
+
+---
+
+
+## Shell Script starten
+
+* Das Script sollte im Verzeichnis sich befinden und gestartet werden in der man auch die VM möchte, da das Script die VM einfach in dem sich befindende Verzeichnis erstellt und startet.
+
+* Das Shell-Script kann mit 3 Arten gestarte werden:
+  
+  * Im Verzeichnis in dem sich das Script befindet.
+     ```
+     ./docker.sh
+     ```
+  * Absolute Pfad
+    ```
+    /data/docker/docker.sh
+    ```  
+
+  * Pfadvariable
+    
+    Das Script befindet sich in einem Verzeichnis das in der Pfadvariabel angegeben ist.
+    ```
+    echo $PATH
+    ```
+    * Pfadvariable anzeigen
+
+---
+
+## Shell Script anpassen
+
+* Das Script kann für weitere Zwecke angepasst werden. 
+
+* Die Parameter können verändert und auch ergänzt werden. 
 
 ---
 
 ## Sicherheit
-* Die Firewall hat die Ports 80 und 3306 geöffnet.
-  * Port 80:
-    * Wird für die Webserver benötigt.
-  * Port 3306:
-    * Wird für die DB-Server benötigt, und ist offen für alle.
-    * Eigentlich ist das überhaupt nicht gut, dass es offen für alle ist, aber da unsere VMs die IP vom DHCP beziehen, ist uns unklar welches Netz wir freigeben müssen.
-* Systeme und VM's die im Internet (DMZ) stehe sollten immer gehärtet sein.
-* Dateinübertragungen sollten immer über eine Verschlüsselte Verbindung gemacht werden.
+
+
+
+[1]: https://de.wikipedia.org/wiki/H%C3%A4rten_(Computer) "härten"
+
+* Systeme und VM's die im Internet (DMZ) stehe sollten immer [gehärtet][1] sein.
+
+* Der Zugriff auf Datenbanken sollte auf die nötigsten Netze beschränkt werden und die Administration nur von einem Bestimmten Netz erlaubt werden.
+
+* Dateinübertragungen sollten immer über eine Verschlüsselte Verbindung gemacht werden. 
+
 * Die Sicherheit kann im Script ausgebaut werden damit es den eigenen Standards entspricht.
-* Mit SSH (Secure Shell) wird eine Verschlüsselte Verbindung zu einem entferneten Rechner oder System aufgebaut. Mit dieser verschlüsselten Verbindung kann auf die Commandline zugegriffen werden und Sicher auf anderen Systemen gearbeiet werden.
+
+* Mit SSH (Secure Shell) wird eine Verschlüsselte Verbindung zu einem entferneten Rechner oder System aufgebaut. Mit dieser verschlüsselten Verbindung kann auf die Commandline zugegriffen werden und Sicher auf anderen Systemen gearbeiet werden. 
+
 
 ---
 
-## Script anpassen
-* Das Script kann ganz einfach mit dem Visual Studio Code geöffnet werden und dann angepasst werden.
+## Testing
 
+### Testfälle
+
+* Die Container wurden erzeugt mit den richtigen Namen?
+
+* Die VM's wurden gestartet und die Dienste laufen?
+
+* Die OSTicket Seite ins verfügbar und das Tool kann verwendet werden? 
+
+### Testergebnisse
+
+* mit dem Befehl `docker ps` können alle laufenden Docker Container angezeigt werden. 
+  * b3013259433f        campbellsoftwaresolutions/osticket   "docker-php-entrypoi…"   5 days ago          Up About a minute   9000/tcp, 0.0.0.0:8                           080->80/tcp   osticket
+  
+  * bd222b9b4092        mysql:5                              "docker-entrypoint.s…"   5 days ago          Up 2 minutes        3306/tcp, 33060/tcp
+
+* beide Container sind erfolgrecih erstellt worden und laufen. 
+
+* Mit der Adresse des Servers `192.168.122.13:8080/scp/` wird die Login Seite von OSTicket angezeigt. 
 ---
 
-## Testergebnisse
-* Das Script startet erfolgreich, ohne Fehler.
-![Script_Startet](Script_startet.png)
-https://ibb.co/gvYfWjD
-* Es werden alle 4 VMs erstellt. Das heisst 2 Webserver und 2 DB-Server
-![VMs_erstellt](alleerstelltenVMs.png)
-![VMs_erstellt_hyperv](vmsinhyperv.PNG)
-https://ibb.co/n7ddbSj
-https://ibb.co/zxxTty1
-* Shell Befehle werden ausgeführt.
-![Shell_Befehle](führtshellbefehleaus.PNG)
-https://ibb.co/c65281M
-* SSH Verbindung zu VM
-![vagrant_ssh](sshverbindungzuvm.png)
-https://ibb.co/QkdczkP
-* Die Shell Befehle um die UFW zu installieren wird erledigt. Zusätzlich wird auch gleich noch Port 80 und 3306 geöffnet.
-![ufw](statusufw.png)
-https://ibb.co/LzXLn7g
-* Ebenfalls wird apache auf den Webserver installiert und mysql-server auf den DB-Server.
-![webserver](startseitewebserver.png)
-https://ibb.co/hymZ3RF
-* Auf den DB-Server wird auch noch der Benutzer mysql erstellt.
-![mysql_user](mysqlbenutzerimetc_passwd.png)
-https://ibb.co/XZgvtzg
 
+## Extras
+
+### WebGUI für Docker
+
+* Es ist möglich ein Docker-Container herunterzuladen der ein WebGUI für die Administration von Docker-Container erzeugt. 
+
+```
+docker run -d -p 9000:9000 --privileged -v /var/run/docker.sock:/var/run/docker.sock uifd/ui-for-docker
+```
+
+* das WebGUI das von diesem Conatiner erzeugt wird kann mit der Server Adresse auf einem Browser angeschauit werden. `http://192.168.122.13:9000/` Der Port kann vor der installation nach Wunsch geändert werden.  
+
+
+### Minecraft DockerGUI
+
+* Mit Dockercraft kann die Docker-Umgebung mit Minecraft Visualisiert werden und auch gesteuert werden. Dockercraft erzeugt einen Java Minecraft Server der mit der Dockerumgebung verbunden ist. 
+
+* Dies ist zwar für die meisten unütz zeigt aber was mit Docker und Container alles möglich ist und das auf jeder Umgebung. Es ist nicht Hardware abhängig. Die Container laufen bei jedem User der Docker installiert hat. 
+* Da Robin der einzige war, der Minecraft installiert hatte, wurde diese Aufgabe nur bei ihm erledigt.
 ---
+
 
 ## Fazit
-* Ich finde das mir dieses Projekt ziemlich gut gelungen ist, da ich ein sauberes und vor allem auch funktionierendes Script schreiben konnte. Ich hatte am Anfang kleine Probleme mit meinem GitHub Account, da ich mein Repository nicht pushen konnte. Nachdem ich dies behoben habe, war alles in Ordnung. Dieses Thema fand ich sehr spannend, da es etwas komplett neues war und Spass gemacht hat. Ausserdem finde ich es auch gut, dass so schnell mehrere VMs erstellt werden können.
-* In diesem Projekt hatte ich einen sehr hohen Wissenszuwachs. Da ich noch nie damit gearbeitet habe, war eigentlich alles neues Wissen, welches ich mir aneignen konnte. Ich kenne jetzt die Basis Befehle von Vagrant, sowie auch den ungefähren Aufbau von GitHub. Ich weiss jetzt wie man anhand von einem Script, mehrere VMs erstellen kann und diese auch gleich bearbeiten oder konfigurieren kann.
+
+* Mit Docker können wie mit Vagrant schnell Umgebungen Aufegabut werden. Diese Umgebung können selbst oder von anderen erstellt worden sein. 
+
+* Mit Docker sind die möglichekiten fast schon grenzenlos.
+
+* Bei Docker-Container die von anderen erstellt wurden kann es zu Problemen kommne um etwas im Imnage zu verstehen oder zu ändern.
+
+* Mit Container können Umgebung in Sekunden schnelle auf jedem System repliziert werden und jeder kann dies Nutzen der auch Docker besitzt. Dies ist auch bei Forschungen sehr nützlich, da so jemand von China die Umgebung von einem Schweizer Forschungsteam in sekunden schnelle 1zu1 replizieren kann. 
+ 
 
 ---
-Author: Aron Augsburger
+
+## Relflexion
+
+In diesem Projekt habe ich sehr viel neues  über Docker gelernt. Zusätzlich konnte ich mir viel neues Wissen über die Arbeiten mit Visual Studio Code aneignen. Es war am Anfang sehr kompliziert da alles ganz neu war, aber mit der Zeit kommt man sehr gut rein und dann macht es auch Spass dammit zu arbeiten. Das Modul war ein bisschen stressig, da es so viele  neue Informationen gibt, welche man gut auffassen muss, sodass man etwas kapiert. Wenn das nicht der Fall ist, ist man ziemlich verloren in diesem Modul. Jedoch finde ich es ein sehr gutes Modul oder auch nur Projekt (LB3), da man sehr viel selbstständig arbeiten kann und somit auch Dinge machen kann, welche einen am meisten interessieren. Die grosse Freiheit und vielfältigkeit gefällt mir auch sehr. Ab und zu gab es zu viele Inputs am morgen, was uns dann Zeit weggenommen hat beim Projekt.
+
+---
+
+## Wissensgewinn
+
+Docker sowie Vagrant Umgebungen aufzubauen und diese selbst anpassen. Ich habe viel über Container gelernt und selbst gesehen welche Vorteile dies gegen den normalen VM hat. Ich nehme aus diesem Modul viel mit in meine Zukunft und versuchte das gelernte die angeschnittenen Themen in der Praxis und im Arbeitsleben einzufliessen und anzuwenden. 
+
+---
+
+von Aron Augsburger
